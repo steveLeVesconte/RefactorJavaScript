@@ -1,17 +1,43 @@
-import invoice from './invoices.json' assert { type: 'json' };
-import plays from './plays.json' assert { type: 'json' };
 
-function statement(invoice, plays) {
+const invoices =[
+    {
+        "customer":"BigCo",
+        "performances":[
+            {
+                "playID":"hamlet",
+                "audience":55
+            },
+            {
+                "playID":"as-like",
+                "audience":35
+            },
+            {
+                "playID":"othello",
+                "audience":40
+            }
+        ]
+    }
+];
+
+
+const plays={
+    "hamlet": {"name":"Hamlet","type": "tragedy"},
+    "as-like":{"name":"As You Like It","type":"comedy"},
+    "othello":{"name": "Othello","type": "tragedy"}
+};
+
+
+function statement(invoices, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `Statement for ${invoice[0].customer}\n`;
+  let result = `Statement for ${invoices[0].customer}\n`;
   const format = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
   }).format;
 
-  for (let perf of invoice[0].performances) {
+  for (let perf of invoices[0].performances) {
     const play = plays[perf.playID];
     let thisAmount = 0;
     switch (play.type) {
@@ -41,9 +67,13 @@ function statement(invoice, plays) {
     perf.audience
   } seats)\n`;
   totalAmount += thisAmount;
+  console.log( 'totalAmount',totalAmount);
 }
+console.log( 'here',result);
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
+  console.log( 'result',result);
   return result;
 }
-console.log( statement(invoice, plays));
+console.log( statement(invoices, plays));
+module.exports= { statement};
